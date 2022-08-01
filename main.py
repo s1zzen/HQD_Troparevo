@@ -3,6 +3,13 @@ from telebot import types
 from keyboa import Keyboa
 
 bot = telebot.TeleBot('5538385628:AAG9-JAd8cFma0ZiZqDULU5GBM1lVh3MWs4')
+
+print("      _/_/_/  _/                                         ")
+print("   _/            _/_/_/_/  _/_/_/_/    _/_/    _/_/_/    ")
+print("    _/_/    _/      _/        _/    _/_/_/_/  _/    _/   ")
+print("       _/  _/    _/        _/      _/        _/    _/    ")
+print("_/_/_/    _/  _/_/_/_/  _/_/_/_/    _/_/_/  _/    _/     ")
+
 dig_f = {}
 tastes = {}
 cart = {}
@@ -52,11 +59,6 @@ def start_msg(message):
             IZIc[i] = [c[i], d[i]]
         for i in range(0, len(c)):
             BackIZI[c[i]] = i
-
-    print(HQDic)
-    print(BackHQD)
-    print(IZIc)
-    print(BackIZI)
     keyboardmain = types.InlineKeyboardMarkup(row_width=2)
     HQD_button = types.InlineKeyboardButton(text="HQD", callback_data="HQD")
     IZI_button = types.InlineKeyboardButton(text="IZI", callback_data="IZI")
@@ -71,18 +73,13 @@ def start_msg(message):
             if totalid[message.chat.id] == 1:
                 Nid = int(HQDic[BackHQD[tst[message.chat.id]]][1])
                 if int(message.text) <= Nid:
-                    print('old ', dig_f[message.chat.id], message.chat.id)
                     dig_f[message.chat.id] = int(message.text)
-                    print('new', dig_f[message.chat.id], ' ', message.chat.id)
-
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
                     bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
                                              caption='Сколько вы хотите заказать?',
                                              reply_markup=plsminkboard(message.chat.id))
                 else:
-                    print('old ', dig_f[message.chat.id])
                     dig_f[message.chat.id] = Nid
-                    print('new', dig_f[message.chat.id])
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
                     bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
                                              caption='У нас нет больше',
@@ -91,9 +88,7 @@ def start_msg(message):
             elif totalid[message.chat.id] == 2:
                 Nid = int(IZIc[BackIZI[tst[message.chat.id]]][1])
                 if int(message.text) <= Nid:
-                    print('old ', dig_f[message.chat.id], ' ', message.chat.id)
                     dig_f[message.chat.id] = int(message.text)
-                    print('new ', dig_f[message.chat.id], ' ', message.chat.id)
 
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
                     bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
@@ -171,11 +166,8 @@ def start_msg(message):
         if call.data == "plus":
             if totalid[call.message.chat.id] == 1:
                 Nid = int(HQDic[BackHQD[tst[call.message.chat.id]]][1])
-                print('Nid = ' + str(Nid))
-                print(dig_f[call.message.chat.id])
                 if dig_f[call.message.chat.id] + 1 <= Nid:
                     dig_f[call.message.chat.id] += 1
-                    print(dig_f[call.message.chat.id])
                     bot.edit_message_reply_markup(
                         chat_id=call.message.chat.id,
                         message_id=call.message.message_id,
@@ -185,7 +177,6 @@ def start_msg(message):
                                               text="К сожалению, больше нет")
             elif totalid[call.message.chat.id] == 2:
                 Nid = int(IZIc[BackIZI[tst[call.message.chat.id]]][1])
-                print('Nid = ' + str(Nid))
                 if dig_f[call.message.chat.id] + 1 <= Nid:
                     dig_f[call.message.chat.id] += 1
                     bot.edit_message_reply_markup(
