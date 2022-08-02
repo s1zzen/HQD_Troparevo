@@ -24,6 +24,15 @@ adr_dost = {}
 com_kury = {}
 end_order = {}
 user_name = {}
+@bot.message_handler(commands=["admchgbase"])
+def adm_chengebase(message):
+    bot.send_message(chat_id=message.chat.id, text='Отправьте данные для csv файла:')
+    bot.register_next_step_handler(message, change_base)
+
+def change_base(message):
+    with open('ink.csv', 'w') as ink:
+        ink.write(message.text)
+    bot.send_message(chat_id=message.chat.id, text='Done')
 
 @bot.message_handler(commands=["start"])
 def start_msg(message):
@@ -364,7 +373,6 @@ def start_msg(message):
                                reply_markup=keyboardmain)
 
     def writebase():
-        global totalid
         a = ''
         b = ''
         c = ''
