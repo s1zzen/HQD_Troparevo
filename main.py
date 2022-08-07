@@ -2,7 +2,10 @@ import telebot
 from telebot import types
 from keyboa import Keyboa
 
-bot = telebot.TeleBot('5538385628:AAG9-JAd8cFma0ZiZqDULU5GBM1lVh3MWs4')
+with open('Token','r')as token_file:
+    Token=token_file.read()
+
+bot = telebot.TeleBot(Token)
 
 print("      _/_/_/  _/                                         ")
 print("   _/            _/_/_/_/  _/_/_/_/    _/_/    _/_/_/    ")
@@ -10,18 +13,17 @@ print("    _/_/    _/      _/        _/    _/_/_/_/  _/    _/   ")
 print("       _/  _/    _/        _/      _/        _/    _/    ")
 print("_/_/_/    _/  _/_/_/_/  _/_/_/_/    _/_/_/  _/    _/     ")
 
-dig_f = {}
-tastes = {}
+count_digit = {}
+list_of_tastes = {}
 cart = {}
-tst = {}
-totalid = {}
-TestMSg = {}
-g_cart = {}
-carttextbox = {}
+taste = {}
+counter_id = {}
+message_of_taste = {}
+exit_cart = {}
 ireturner = {1: 'HQD', 2: 'IZI'}
 
-adr_dost = {}
-com_kury = {}
+adress_delivery = {}
+comment_courier = {}
 end_order = {}
 user_name = {}
 @bot.message_handler(commands=["admchgbase"])
@@ -36,20 +38,20 @@ def change_base(message):
 
 @bot.message_handler(commands=["start"])
 def start_msg(message):
-    global g_cart
-    global dig_f
-    global tst
-    global totalid
-    global tastes
-    global TestMSg
+    global exit_cart
+    global count_digit
+    global taste
+    global counter_id
+    global list_of_tastes
+    global message_of_taste
     cht_id = message.chat.id
     user_name[message.chat.id] = message.from_user.username
-    dig_f[cht_id] = 0
-    tastes[cht_id] = []
+    count_digit[cht_id] = 0
+    list_of_tastes[cht_id] = []
     cart[cht_id] = []
-    tst[cht_id] = ''
-    totalid[cht_id] = 0
-    TestMSg[cht_id] = 0
+    taste[cht_id] = ''
+    counter_id[cht_id] = 0
+    message_of_taste[cht_id] = 0
     with open('ink.csv', 'r') as ink:
         k = ink.readlines()
         a = k[0].replace(';\n', '').split(';')
@@ -76,107 +78,107 @@ def start_msg(message):
         bot.send_photo(message.chat.id, logo, caption="Здравствуйте!\nВыберите товар", reply_markup=keyboardmain)
 
     def hand_digit(message):
-        global dig_f
-        global TestMSg
+        global count_digit
+        global message_of_taste
         if message.text.isdigit():
-            if totalid[message.chat.id] == 1:
-                Nid = int(HQDic[BackHQD[tst[message.chat.id]]][1])
+            if counter_id[message.chat.id] == 1:
+                Nid = int(HQDic[BackHQD[taste[message.chat.id]]][1])
                 if int(message.text) <= Nid:
-                    dig_f[message.chat.id] = int(message.text)
+                    count_digit[message.chat.id] = int(message.text)
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-                    bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
+                    bot.edit_message_caption(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                                              caption='Сколько вы хотите заказать?',
                                              reply_markup=plsminkboard(message.chat.id))
                 else:
-                    dig_f[message.chat.id] = Nid
+                    count_digit[message.chat.id] = Nid
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-                    bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
+                    bot.edit_message_caption(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                                              caption='У нас нет больше',
                                              reply_markup=plsminkboard(message.chat.id))
 
-            elif totalid[message.chat.id] == 2:
-                Nid = int(IZIc[BackIZI[tst[message.chat.id]]][1])
+            elif counter_id[message.chat.id] == 2:
+                Nid = int(IZIc[BackIZI[taste[message.chat.id]]][1])
                 if int(message.text) <= Nid:
-                    dig_f[message.chat.id] = int(message.text)
+                    count_digit[message.chat.id] = int(message.text)
 
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-                    bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
+                    bot.edit_message_caption(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                                              caption='Сколько вы хотите заказать?',
                                              reply_markup=plsminkboard(message.chat.id))
                 else:
-                    dig_f[message.chat.id] = Nid
+                    count_digit[message.chat.id] = Nid
                     bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-                    bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
+                    bot.edit_message_caption(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                                              caption='У нас нет больше',
                                              reply_markup=plsminkboard(message.chat.id))
 
         else:
             bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-            bot.edit_message_caption(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
+            bot.edit_message_caption(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                                      caption='Вы ввели не число!!!',
                                      reply_markup=plsminkboard(message.chat.id))
     def com_adress(message):
         bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-        adr_dost[message.chat.id] = message.text
+        adress_delivery[message.chat.id] = message.text
         ynkeyboard = types.InlineKeyboardMarkup()
         y_button = types.InlineKeyboardButton(text='Да', callback_data='yadress')
         n_button = types.InlineKeyboardButton(text='Нет',callback_data='order')
         ynkeyboard.add(y_button,n_button)
-        bot.edit_message_text(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
-                                 text='Правильно?\n' + message.text,
-                                 reply_markup=ynkeyboard)
+        bot.edit_message_text(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
+                              text='Правильно?\n' + message.text,
+                              reply_markup=ynkeyboard)
     def com_kuriy(message):
         bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-        com_kury[message.chat.id] = message.text
+        comment_courier[message.chat.id] = message.text
         ynkeyboard = types.InlineKeyboardMarkup()
         y_button = types.InlineKeyboardButton(text='Да', callback_data='nocoments')
         n_button = types.InlineKeyboardButton(text='Нет',callback_data='comentyes')
         ynkeyboard.add(y_button,n_button)
-        bot.edit_message_text(chat_id=message.chat.id, message_id=TestMSg[message.chat.id],
-                                 text='Правильно?\n' + message.text,
-                                 reply_markup=ynkeyboard)
+        bot.edit_message_text(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
+                              text='Правильно?\n' + message.text,
+                              reply_markup=ynkeyboard)
 
     @bot.callback_query_handler(func=lambda call: True)
     def callback_inline(call):
-        global adr_dost
-        global g_cart
-        global dig_f
-        global tst
-        global totalid
-        global tastes
-        global TestMSg
+        global adress_delivery
+        global exit_cart
+        global count_digit
+        global taste
+        global counter_id
+        global list_of_tastes
+        global message_of_taste
         if call.data == 'HQD':
-            dig_f[call.message.chat.id] = 0
-            totalid[call.message.chat.id] = 1
+            count_digit[call.message.chat.id] = 0
+            counter_id[call.message.chat.id] = 1
 
             for i in HQDic:
-                tastes[call.message.chat.id].append(HQDic[i][0])
-            tastes[call.message.chat.id].append('<-')
-            HQDkeyboard = Keyboa(items=tastes[call.message.chat.id], items_in_row=1)
+                list_of_tastes[call.message.chat.id].append(HQDic[i][0])
+            list_of_tastes[call.message.chat.id].append('<-')
+            HQDkeyboard = Keyboa(items=list_of_tastes[call.message.chat.id], items_in_row=1)
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             with open('photo/HQDlogo.jpg', 'rb') as logo:
                 bot.send_photo(chat_id=call.message.chat.id, photo=logo, caption='HQD\nВыберите вкус',
                                reply_markup=HQDkeyboard())
-            del tastes[call.message.chat.id][-1]
+            del list_of_tastes[call.message.chat.id][-1]
         if call.data == 'IZI':
-            dig_f[call.message.chat.id] = 0
-            totalid[call.message.chat.id] = 2
+            count_digit[call.message.chat.id] = 0
+            counter_id[call.message.chat.id] = 2
             for i in IZIc:
-                tastes[call.message.chat.id].append(IZIc[i][0])
-            tastes[call.message.chat.id].append('<-')
-            IZIkeyboard = Keyboa(items=tastes[call.message.chat.id], items_in_row=1)
+                list_of_tastes[call.message.chat.id].append(IZIc[i][0])
+            list_of_tastes[call.message.chat.id].append('<-')
+            IZIkeyboard = Keyboa(items=list_of_tastes[call.message.chat.id], items_in_row=1)
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             with open('photo/izilogo.jpeg', 'rb') as logo:
                 bot.send_photo(chat_id=call.message.chat.id, photo=logo, caption='IZI\nВыберите вкус',
                                reply_markup=IZIkeyboard())
-            del tastes[call.message.chat.id][-1]
+            del list_of_tastes[call.message.chat.id][-1]
         if call.data == '<-':
             backmenu(call)
         if call.data == "plus":
-            if totalid[call.message.chat.id] == 1:
-                Nid = int(HQDic[BackHQD[tst[call.message.chat.id]]][1])
-                if dig_f[call.message.chat.id] + 1 <= Nid:
-                    dig_f[call.message.chat.id] += 1
+            if counter_id[call.message.chat.id] == 1:
+                Nid = int(HQDic[BackHQD[taste[call.message.chat.id]]][1])
+                if count_digit[call.message.chat.id] + 1 <= Nid:
+                    count_digit[call.message.chat.id] += 1
                     bot.edit_message_reply_markup(
                         chat_id=call.message.chat.id,
                         message_id=call.message.message_id,
@@ -184,10 +186,10 @@ def start_msg(message):
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text="К сожалению, больше нет")
-            elif totalid[call.message.chat.id] == 2:
-                Nid = int(IZIc[BackIZI[tst[call.message.chat.id]]][1])
-                if dig_f[call.message.chat.id] + 1 <= Nid:
-                    dig_f[call.message.chat.id] += 1
+            elif counter_id[call.message.chat.id] == 2:
+                Nid = int(IZIc[BackIZI[taste[call.message.chat.id]]][1])
+                if count_digit[call.message.chat.id] + 1 <= Nid:
+                    count_digit[call.message.chat.id] += 1
                     bot.edit_message_reply_markup(
                         chat_id=call.message.chat.id,
                         message_id=call.message.message_id,
@@ -197,15 +199,15 @@ def start_msg(message):
                                               text="К сожалению, больше нет")
         if call.data == "digid":
 
-            TestMSg[call.message.chat.id] = call.message.message_id
-            if totalid[call.message.chat.id] == 1:
+            message_of_taste[call.message.chat.id] = call.message.message_id
+            if counter_id[call.message.chat.id] == 1:
                 backbut = "HQD"
             else:
                 backbut = "IZI"
 
             keyboard = types.InlineKeyboardMarkup(row_width=1)
-            tastebutton = types.InlineKeyboardButton(text=tst[call.message.chat.id], callback_data=backbut)
-            rele2 = types.InlineKeyboardButton(text=str(dig_f[call.message.chat.id]), callback_data='digid')
+            tastebutton = types.InlineKeyboardButton(text=taste[call.message.chat.id], callback_data=backbut)
+            rele2 = types.InlineKeyboardButton(text=str(count_digit[call.message.chat.id]), callback_data='digid')
             cartbutton = types.InlineKeyboardButton(text="отправте количество", callback_data="None")
             keyboard.add(tastebutton, rele2, cartbutton)
             bot.edit_message_caption(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -214,8 +216,8 @@ def start_msg(message):
 
             bot.register_next_step_handler(call.message, hand_digit)
         if call.data == "minus":
-            if dig_f[call.message.chat.id] > 0:
-                dig_f[call.message.chat.id] -= 1
+            if count_digit[call.message.chat.id] > 0:
+                count_digit[call.message.chat.id] -= 1
                 bot.edit_message_reply_markup(
                     chat_id=call.message.chat.id,
                     message_id=call.message.message_id,
@@ -223,40 +225,40 @@ def start_msg(message):
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text="нельзя")
                 plsminkboard(call.message.chat.id)
-        for i in tastes[call.message.chat.id]:
+        for i in list_of_tastes[call.message.chat.id]:
             if call.data == i:
-                tst[call.message.chat.id] = i
+                taste[call.message.chat.id] = i
                 bot.edit_message_caption(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                          caption='Сколько вы хотите заказать?',
                                          reply_markup=plsminkboard(call.message.chat.id))
         if call.data == "cart":
-            if dig_f[call.message.chat.id] != 0:
-                if call.message.chat.id in g_cart:
-                    if ireturner[totalid[call.message.chat.id]] + " " + tst[call.message.chat.id] in g_cart[
+            if count_digit[call.message.chat.id] != 0:
+                if call.message.chat.id in exit_cart:
+                    if ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id] in exit_cart[
                         call.message.chat.id]:
-                        g_cart[call.message.chat.id][
-                            ireturner[totalid[call.message.chat.id]] + " " + tst[call.message.chat.id]] += dig_f[
+                        exit_cart[call.message.chat.id][
+                            ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]] += count_digit[
                             call.message.chat.id]
                     else:
-                        g_cart[call.message.chat.id][
-                            ireturner[totalid[call.message.chat.id]] + " " + tst[call.message.chat.id]] = dig_f[
+                        exit_cart[call.message.chat.id][
+                            ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]] = count_digit[
                             call.message.chat.id]
                 else:
-                    g_cart[call.message.chat.id] = {
-                        ireturner[totalid[call.message.chat.id]] + " " + tst[call.message.chat.id]: dig_f[
+                    exit_cart[call.message.chat.id] = {
+                        ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]: count_digit[
                             call.message.chat.id]}
-                if totalid[call.message.chat.id] == 1:
-                    if int(HQDic[BackHQD[tst[call.message.chat.id]]][1]) - dig_f[call.message.chat.id] == 0:
-                        del HQDic[BackHQD[tst[call.message.chat.id]]]
+                if counter_id[call.message.chat.id] == 1:
+                    if int(HQDic[BackHQD[taste[call.message.chat.id]]][1]) - count_digit[call.message.chat.id] == 0:
+                        del HQDic[BackHQD[taste[call.message.chat.id]]]
                     else:
-                        HQDic[BackHQD[tst[call.message.chat.id]]][1] = str(
-                            int(HQDic[BackHQD[tst[call.message.chat.id]]][1]) - dig_f[call.message.chat.id])
-                elif totalid[call.message.chat.id] == 2:
-                    if int(IZIc[BackIZI[tst[call.message.chat.id]]][1]) - dig_f[call.message.chat.id] == 0:
-                        del IZIc[BackIZI[tst[call.message.chat.id]]]
+                        HQDic[BackHQD[taste[call.message.chat.id]]][1] = str(
+                            int(HQDic[BackHQD[taste[call.message.chat.id]]][1]) - count_digit[call.message.chat.id])
+                elif counter_id[call.message.chat.id] == 2:
+                    if int(IZIc[BackIZI[taste[call.message.chat.id]]][1]) - count_digit[call.message.chat.id] == 0:
+                        del IZIc[BackIZI[taste[call.message.chat.id]]]
                     else:
-                        IZIc[BackIZI[tst[call.message.chat.id]]][1] = str(
-                            int(IZIc[BackIZI[tst[call.message.chat.id]]][1]) - dig_f[call.message.chat.id])
+                        IZIc[BackIZI[taste[call.message.chat.id]]][1] = str(
+                            int(IZIc[BackIZI[taste[call.message.chat.id]]][1]) - count_digit[call.message.chat.id])
                 writebase()
 
                 backmenu(call)
@@ -264,23 +266,23 @@ def start_msg(message):
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text="Хотяб одну")
         if call.data == "clearcart":
-            for i in g_cart[call.message.chat.id]:
+            for i in exit_cart[call.message.chat.id]:
                 a_id = i.split(' ')[0]
                 b_tst = i.split(' ')[1]
                 if a_id == 'HQD':
-                    HQDic[BackHQD[b_tst]][1] = str(int(HQDic[BackHQD[b_tst]][1]) + g_cart[call.message.chat.id][i])
+                    HQDic[BackHQD[b_tst]][1] = str(int(HQDic[BackHQD[b_tst]][1]) + exit_cart[call.message.chat.id][i])
                 else:
-                    IZIc[BackIZI[b_tst]][1] = str(int(IZIc[BackIZI[b_tst]][1]) + g_cart[call.message.chat.id][i])
-            del g_cart[call.message.chat.id]
+                    IZIc[BackIZI[b_tst]][1] = str(int(IZIc[BackIZI[b_tst]][1]) + exit_cart[call.message.chat.id][i])
+            del exit_cart[call.message.chat.id]
             backmenu(call)
         if call.data == "order":
-            if call.message.chat.id in g_cart:
-                if call.message.chat.id in adr_dost:
-                    del adr_dost[call.message.chat.id]
+            if call.message.chat.id in exit_cart:
+                if call.message.chat.id in adress_delivery:
+                    del adress_delivery[call.message.chat.id]
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                 backkeybord = types.InlineKeyboardMarkup()
                 backkeybord.add(types.InlineKeyboardButton(text='Главное меню',callback_data='<-'))
-                TestMSg[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id, text='Отправте, пожалуйста, адрес\nна который будет произведена доставка', reply_markup=backkeybord).message_id
+                message_of_taste[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id, text='Отправте, пожалуйста, адрес\nна который будет произведена доставка', reply_markup=backkeybord).message_id
                 bot.register_next_step_handler(call.message, com_adress)
 
 
@@ -296,20 +298,20 @@ def start_msg(message):
             comentkeyboard.add(nendbutton)
             bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,text='Хотите оставить комментарий для курьера?',reply_markup=comentkeyboard)
         if call.data == "comentyes":
-            if call.message.chat.id in com_kury:
-                del com_kury[call.message.chat.id]
+            if call.message.chat.id in comment_courier:
+                del comment_courier[call.message.chat.id]
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-            TestMSg[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id,
-                             text='Комментарий: ').message_id
+            message_of_taste[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id,
+                                                                      text='Комментарий: ').message_id
             bot.register_next_step_handler(call.message, com_kuriy)
         if call.data == "nocoments":
             bot.delete_message(chat_id=call.message.chat.id,message_id=call.message.message_id)
             end_order[call.message.chat.id]= 'Ваш заказ:\n'
-            for i in g_cart[call.message.chat.id]:
-                end_order[call.message.chat.id] += i + ' x' + str(g_cart[call.message.chat.id][i]) + '\n'
-            end_order[call.message.chat.id] += '\n Адрес доставки:\n' + adr_dost[call.message.chat.id]
-            if call.message.chat.id in com_kury:
-                end_order[call.message.chat.id] += '\n\nКомментарий:\n' + com_kury[call.message.chat.id]
+            for i in exit_cart[call.message.chat.id]:
+                end_order[call.message.chat.id] += i + ' x' + str(exit_cart[call.message.chat.id][i]) + '\n'
+            end_order[call.message.chat.id] += '\n Адрес доставки:\n' + adress_delivery[call.message.chat.id]
+            if call.message.chat.id in comment_courier:
+                end_order[call.message.chat.id] += '\n\nКомментарий:\n' + comment_courier[call.message.chat.id]
             end_order[call.message.chat.id] += '\nКак с Вами связаться:\n@' + user_name[call.message.chat.id]
             endkboard = types.InlineKeyboardMarkup()
             yendbutton = types.InlineKeyboardButton(text='Все верно', callback_data='endoftheends')
@@ -321,40 +323,38 @@ def start_msg(message):
             bot.send_message(chat_id=call.message.chat.id, text='спасибо за заказ!\nОжидайте курьера\nДля повторного заказа\nпропишите /start')
             bot.send_message(chat_id='-1001721728601', text=end_order[call.message.chat.id])
 
-            if call.message.chat.id in dig_f:
-                del dig_f[call.message.chat.id]
-            if call.message.chat.id in tastes:
-                del tastes[call.message.chat.id]
+            if call.message.chat.id in count_digit:
+                del count_digit[call.message.chat.id]
+            if call.message.chat.id in list_of_tastes:
+                del list_of_tastes[call.message.chat.id]
             if call.message.chat.id in cart:
                 del cart[call.message.chat.id]
-            if call.message.chat.id in tst:
-                del tst[call.message.chat.id]
-            if call.message.chat.id in totalid:
-                del totalid[call.message.chat.id]
-            if call.message.chat.id in TestMSg:
-                del TestMSg[call.message.chat.id]
-            if call.message.chat.id in g_cart:
-                del g_cart[call.message.chat.id]
-            if call.message.chat.id in carttextbox:
-                del carttextbox[call.message.chat.id]
-            if call.message.chat.id in adr_dost:
-                del adr_dost[call.message.chat.id]
-            if call.message.chat.id in com_kury:
-                del com_kury[call.message.chat.id]
+            if call.message.chat.id in taste:
+                del taste[call.message.chat.id]
+            if call.message.chat.id in counter_id:
+                del counter_id[call.message.chat.id]
+            if call.message.chat.id in message_of_taste:
+                del message_of_taste[call.message.chat.id]
+            if call.message.chat.id in exit_cart:
+                del exit_cart[call.message.chat.id]
+            if call.message.chat.id in adress_delivery:
+                del adress_delivery[call.message.chat.id]
+            if call.message.chat.id in comment_courier:
+                del comment_courier[call.message.chat.id]
             if call.message.chat.id in end_order:
                 del end_order[call.message.chat.id]
             if call.message.chat.id in user_name:
                 del user_name[call.message.chat.id]
 
     def backmenu(call):
-        dig_f[call.message.chat.id] = 0
-        tst[call.message.chat.id] = ''
-        tastes[call.message.chat.id] = []
+        count_digit[call.message.chat.id] = 0
+        taste[call.message.chat.id] = ''
+        list_of_tastes[call.message.chat.id] = []
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-        if call.message.chat.id in g_cart:
+        if call.message.chat.id in exit_cart:
             srincart = ''
-            for i in g_cart[call.message.chat.id]:
-                srincart += i + ' ' + str(g_cart[call.message.chat.id][i]) + '\n'
+            for i in exit_cart[call.message.chat.id]:
+                srincart += i + ' ' + str(exit_cart[call.message.chat.id][i]) + '\n'
 
             keyboardmain = types.InlineKeyboardMarkup(row_width=2)
             HQD_button = types.InlineKeyboardButton(text="HQD", callback_data="HQD")
@@ -397,23 +397,23 @@ def start_msg(message):
             ink.write(d)
 
     def plsminkboard(msgchtid):
-        global tst
-        global totalid
-        global dig_f
-        global tastes
-        if totalid[msgchtid] == 1:
+        global taste
+        global counter_id
+        global count_digit
+        global list_of_tastes
+        if counter_id[msgchtid] == 1:
             backbut = "HQD"
         else:
             backbut = "IZI"
         keyboard = types.InlineKeyboardMarkup(row_width=3)
-        tastebutton = types.InlineKeyboardButton(text=tst[msgchtid], callback_data=backbut)
+        tastebutton = types.InlineKeyboardButton(text=taste[msgchtid], callback_data=backbut)
         rele1 = types.InlineKeyboardButton(text="+", callback_data="plus")
-        rele2 = types.InlineKeyboardButton(text=str(dig_f[msgchtid]), callback_data='digid')
+        rele2 = types.InlineKeyboardButton(text=str(count_digit[msgchtid]), callback_data='digid')
         rele3 = types.InlineKeyboardButton(text="-", callback_data="minus")
         cartbutton = types.InlineKeyboardButton(text="Добавить в заказ", callback_data="cart")
         keyboard.add(tastebutton)
         keyboard.add(rele1, rele2, rele3, cartbutton)
-        tastes[msgchtid] = []
+        list_of_tastes[msgchtid] = []
         return keyboard
 
 if __name__ == "__main__":
