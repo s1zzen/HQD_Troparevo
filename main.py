@@ -278,7 +278,9 @@ def start_msg(message):
                 if call.message.chat.id in adr_dost:
                     del adr_dost[call.message.chat.id]
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-                TestMSg[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id, text='Отправте, пожалуйста, адрес\nна который будет произведена доставка').message_id
+                backkeybord = types.InlineKeyboardMarkup()
+                backkeybord.add(types.InlineKeyboardButton(text='Главное меню',callback_data='<-'))
+                TestMSg[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id, text='Отправте, пожалуйста, адрес\nна который будет произведена доставка', reply_markup=backkeybord).message_id
                 bot.register_next_step_handler(call.message, com_adress)
 
 
@@ -289,7 +291,9 @@ def start_msg(message):
             comentkeyboard = types.InlineKeyboardMarkup()
             y_button = types.InlineKeyboardButton(text='Да', callback_data='comentyes')
             n_button = types.InlineKeyboardButton(text='Нет', callback_data='nocoments')
+            nendbutton = types.InlineKeyboardButton(text='Главное меню',callback_data='<-')
             comentkeyboard.add(y_button, n_button)
+            comentkeyboard.add(nendbutton)
             bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,text='Хотите оставить комментарий для курьера?',reply_markup=comentkeyboard)
         if call.data == "comentyes":
             if call.message.chat.id in com_kury:
