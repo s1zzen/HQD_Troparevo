@@ -2,8 +2,8 @@ import telebot
 from telebot import types
 from keyboa import Keyboa
 
-with open('Token','r')as token_file:
-    Token=token_file.read()
+with open('Token', 'r') as token_file:
+    Token = token_file.read()
 
 bot = telebot.TeleBot(Token)
 
@@ -26,15 +26,19 @@ adress_delivery = {}
 comment_courier = {}
 end_order = {}
 user_name = {}
+
+
 @bot.message_handler(commands=["admchgbase"])
 def adm_chengebase(message):
     bot.send_message(chat_id=message.chat.id, text='Отправьте данные для csv файла:')
     bot.register_next_step_handler(message, change_base)
 
+
 def change_base(message):
     with open('ink.csv', 'w') as ink:
         ink.write(message.text)
     bot.send_message(chat_id=message.chat.id, text='Done')
+
 
 @bot.message_handler(commands=["start"])
 def start_msg(message):
@@ -117,23 +121,25 @@ def start_msg(message):
             bot.edit_message_caption(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                                      caption='Вы ввели не число!!!',
                                      reply_markup=plsminkboard(message.chat.id))
+
     def com_adress(message):
         bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
         adress_delivery[message.chat.id] = message.text
         ynkeyboard = types.InlineKeyboardMarkup()
         y_button = types.InlineKeyboardButton(text='Да', callback_data='yadress')
-        n_button = types.InlineKeyboardButton(text='Нет',callback_data='order')
-        ynkeyboard.add(y_button,n_button)
+        n_button = types.InlineKeyboardButton(text='Нет', callback_data='order')
+        ynkeyboard.add(y_button, n_button)
         bot.edit_message_text(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                               text='Правильно?\n' + message.text,
                               reply_markup=ynkeyboard)
+
     def com_kuriy(message):
         bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
         comment_courier[message.chat.id] = message.text
         ynkeyboard = types.InlineKeyboardMarkup()
         y_button = types.InlineKeyboardButton(text='Да', callback_data='nocoments')
-        n_button = types.InlineKeyboardButton(text='Нет',callback_data='comentyes')
-        ynkeyboard.add(y_button,n_button)
+        n_button = types.InlineKeyboardButton(text='Нет', callback_data='comentyes')
+        ynkeyboard.add(y_button, n_button)
         bot.edit_message_text(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
                               text='Правильно?\n' + message.text,
                               reply_markup=ynkeyboard)
@@ -237,11 +243,13 @@ def start_msg(message):
                     if ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id] in exit_cart[
                         call.message.chat.id]:
                         exit_cart[call.message.chat.id][
-                            ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]] += count_digit[
+                            ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]] += \
+                        count_digit[
                             call.message.chat.id]
                     else:
                         exit_cart[call.message.chat.id][
-                            ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]] = count_digit[
+                            ireturner[counter_id[call.message.chat.id]] + " " + taste[call.message.chat.id]] = \
+                        count_digit[
                             call.message.chat.id]
                 else:
                     exit_cart[call.message.chat.id] = {
@@ -281,8 +289,10 @@ def start_msg(message):
                     del adress_delivery[call.message.chat.id]
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                 backkeybord = types.InlineKeyboardMarkup()
-                backkeybord.add(types.InlineKeyboardButton(text='Главное меню',callback_data='<-'))
-                message_of_taste[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id, text='Отправте, пожалуйста, адрес\nна который будет произведена доставка', reply_markup=backkeybord).message_id
+                backkeybord.add(types.InlineKeyboardButton(text='Главное меню', callback_data='<-'))
+                message_of_taste[call.message.chat.id] = bot.send_message(chat_id=call.message.chat.id,
+                                                                          text='Отправте, пожалуйста, адрес\nна который будет произведена доставка',
+                                                                          reply_markup=backkeybord).message_id
                 bot.register_next_step_handler(call.message, com_adress)
 
 
@@ -293,10 +303,11 @@ def start_msg(message):
             comentkeyboard = types.InlineKeyboardMarkup()
             y_button = types.InlineKeyboardButton(text='Да', callback_data='comentyes')
             n_button = types.InlineKeyboardButton(text='Нет', callback_data='nocoments')
-            nendbutton = types.InlineKeyboardButton(text='Главное меню',callback_data='<-')
+            nendbutton = types.InlineKeyboardButton(text='Главное меню', callback_data='<-')
             comentkeyboard.add(y_button, n_button)
             comentkeyboard.add(nendbutton)
-            bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,text='Хотите оставить комментарий для курьера?',reply_markup=comentkeyboard)
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                  text='Хотите оставить комментарий для курьера?', reply_markup=comentkeyboard)
         if call.data == "comentyes":
             if call.message.chat.id in comment_courier:
                 del comment_courier[call.message.chat.id]
@@ -305,8 +316,8 @@ def start_msg(message):
                                                                       text='Комментарий: ').message_id
             bot.register_next_step_handler(call.message, com_kuriy)
         if call.data == "nocoments":
-            bot.delete_message(chat_id=call.message.chat.id,message_id=call.message.message_id)
-            end_order[call.message.chat.id]= 'Ваш заказ:\n'
+            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+            end_order[call.message.chat.id] = 'Ваш заказ:\n'
             for i in exit_cart[call.message.chat.id]:
                 end_order[call.message.chat.id] += i + ' x' + str(exit_cart[call.message.chat.id][i]) + '\n'
             end_order[call.message.chat.id] += '\n Адрес доставки:\n' + adress_delivery[call.message.chat.id]
@@ -315,12 +326,13 @@ def start_msg(message):
             end_order[call.message.chat.id] += '\nКак с Вами связаться:\n@' + user_name[call.message.chat.id]
             endkboard = types.InlineKeyboardMarkup()
             yendbutton = types.InlineKeyboardButton(text='Все верно', callback_data='endoftheends')
-            nendbutton = types.InlineKeyboardButton(text='Главное меню',callback_data='<-')
+            nendbutton = types.InlineKeyboardButton(text='Главное меню', callback_data='<-')
             endkboard.add(yendbutton, nendbutton)
-            bot.send_message(chat_id=call.message.chat.id, text=end_order[call.message.chat.id],reply_markup=endkboard)
+            bot.send_message(chat_id=call.message.chat.id, text=end_order[call.message.chat.id], reply_markup=endkboard)
         if call.data == "endoftheends":
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-            bot.send_message(chat_id=call.message.chat.id, text='спасибо за заказ!\nОжидайте курьера\nДля повторного заказа\nпропишите /start')
+            bot.send_message(chat_id=call.message.chat.id,
+                             text='спасибо за заказ!\nОжидайте курьера\nДля повторного заказа\nпропишите /start')
             bot.send_message(chat_id='-1001721728601', text=end_order[call.message.chat.id])
 
             if call.message.chat.id in count_digit:
@@ -415,6 +427,7 @@ def start_msg(message):
         keyboard.add(rele1, rele2, rele3, cartbutton)
         list_of_tastes[msgchtid] = []
         return keyboard
+
 
 if __name__ == "__main__":
     bot.polling(none_stop=True)
