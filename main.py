@@ -130,7 +130,7 @@ def start_msg(message):
         n_button = types.InlineKeyboardButton(text='Нет', callback_data='order')
         ynkeyboard.add(y_button, n_button)
         bot.edit_message_text(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
-                              text='Правильно?\n' + message.text,
+                              text=f'Правильно?\n{message.text}',
                               reply_markup=ynkeyboard)
 
     def com_kuriy(message):
@@ -141,7 +141,7 @@ def start_msg(message):
         n_button = types.InlineKeyboardButton(text='Нет', callback_data='comentyes')
         ynkeyboard.add(y_button, n_button)
         bot.edit_message_text(chat_id=message.chat.id, message_id=message_of_taste[message.chat.id],
-                              text='Правильно?\n' + message.text,
+                              text=f'Правильно?\n{message.text}',
                               reply_markup=ynkeyboard)
 
     @bot.callback_query_handler(func=lambda call: True)
@@ -319,11 +319,11 @@ def start_msg(message):
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             end_order[call.message.chat.id] = 'Ваш заказ:\n'
             for i in exit_cart[call.message.chat.id]:
-                end_order[call.message.chat.id] += i + ' x' + str(exit_cart[call.message.chat.id][i]) + '\n'
-            end_order[call.message.chat.id] += '\n Адрес доставки:\n' + adress_delivery[call.message.chat.id]
+                end_order[call.message.chat.id] += f'{i} x {str(exit_cart[call.message.chat.id][i])}\n'
+            end_order[call.message.chat.id] += f'\n Адрес доставки:\n{adress_delivery[call.message.chat.id]}'
             if call.message.chat.id in comment_courier:
-                end_order[call.message.chat.id] += '\n\nКомментарий:\n' + comment_courier[call.message.chat.id]
-            end_order[call.message.chat.id] += '\nКак с Вами связаться:\n@' + user_name[call.message.chat.id]
+                end_order[call.message.chat.id] += f'\n\nКомментарий:\n{comment_courier[call.message.chat.id]}'
+            end_order[call.message.chat.id] += f'\nКак с Вами связаться:\n@{user_name[call.message.chat.id]}'
             endkboard = types.InlineKeyboardMarkup()
             yendbutton = types.InlineKeyboardButton(text='Все верно', callback_data='endoftheends')
             nendbutton = types.InlineKeyboardButton(text='Главное меню', callback_data='<-')
@@ -364,9 +364,9 @@ def start_msg(message):
         list_of_tastes[call.message.chat.id] = []
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
         if call.message.chat.id in exit_cart:
-            srincart = ''
+            cart_to_str = ''
             for i in exit_cart[call.message.chat.id]:
-                srincart += i + ' ' + str(exit_cart[call.message.chat.id][i]) + '\n'
+                cart_to_str += f'{i} {str(exit_cart[call.message.chat.id][i])}\n'
 
             keyboardmain = types.InlineKeyboardMarkup(row_width=2)
             HQD_button = types.InlineKeyboardButton(text="HQD", callback_data="HQD")
@@ -377,7 +377,7 @@ def start_msg(message):
             keyboardmain.add(clearcart_button)
             keyboardmain.add(offer_button)
             with open('photo/Troparevo.jpeg', 'rb') as logo:
-                bot.send_photo(call.message.chat.id, logo, caption=("В корзине:\n" + srincart),
+                bot.send_photo(call.message.chat.id, logo, caption=(f"В корзине:\n{cart_to_str}"),
                                reply_markup=keyboardmain)
         else:
             keyboardmain = types.InlineKeyboardMarkup(row_width=2)
