@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 from keyboa import Keyboa
 
-with open('Token', 'r') as token_file:
+with open('Token.txt', 'r') as token_file:
     Token = token_file.read()
 
 bot = telebot.TeleBot(Token)
